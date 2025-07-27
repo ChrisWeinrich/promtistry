@@ -1,1 +1,8 @@
-# placeholder
+site_name: promtistry
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+
+docs_dir: docs
