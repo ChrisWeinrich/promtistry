@@ -7,7 +7,7 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.13.0,<4.0.0"
+requires-python = ">=3.11.0,<4.0.0"
 dependencies = [
     "streamlit>=1.29.0,<2.0.0",
     "langchain>=0.0.180,<1.0.0",
@@ -40,7 +40,7 @@ ignore = []
 fix = true
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.11"
 warn_unused_configs = true
 warn_return_any = true
 warn_unused_ignores = true
