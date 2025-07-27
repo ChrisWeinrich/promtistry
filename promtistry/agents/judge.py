@@ -1,10 +1,12 @@
-from typing import Any
-
+"""Judge agent module."""
 
 class JudgeAgent:
     """Agent responsible for evaluating or judging content."""
 
-    def run(self, *args: Any, **kwargs: Any) -> Any:
-        """Execute the judge agent's main logic."""
-        # TODO: Implement judge logic
+    def run(self) -> str:
+        """Execute the judge agent's main logic.
+
+        Returns:
+            str: Result of the judge agent's execution.
+        """
         return "JudgeAgent run executed"
