@@ -1,1 +1,1 @@
-# placeholder
+"""promtistry package root."""
