@@ -1,7 +1,5 @@
 """Smoke tests for promtistry agents."""
 
-import pytest
-
 from promtistry.agents.builder import BuilderAgent
 from promtistry.agents.judge import JudgeAgent
 
