@@ -4,7 +4,7 @@
 class JudgeAgent:
     """Agent responsible for evaluating or judging content."""
 
-    def run(self) -> str:
+    def run(self: "JudgeAgent") -> str:
         """Execute the judge agent's main logic.
 
         Returns

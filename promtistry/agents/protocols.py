@@ -6,7 +6,7 @@ from typing import Protocol
 class Agent(Protocol):
     """Protocol for all promtistry agents."""
 
-    def run(self) -> str:
+    def run(self: "Agent") -> str:
         """Execute the agent's main logic.
 
         Returns

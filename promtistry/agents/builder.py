@@ -4,7 +4,7 @@
 class BuilderAgent:
     """Agent responsible for building or generating content."""
 
-    def run(self) -> str:
+    def run(self: "BuilderAgent") -> str:
         """Execute the builder agent's main logic.
 
         Returns
