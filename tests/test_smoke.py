@@ -1,8 +1,10 @@
 """Smoke tests for promtistry agents."""
 
+import pytest
+
 from promtistry.agents.builder import BuilderAgent
 from promtistry.agents.judge import JudgeAgent
-import pytest
+
 
 def test_builder_agent_smoke() -> None:
     """Test that BuilderAgent.run() can be called without error."""
@@ -11,6 +13,7 @@ def test_builder_agent_smoke() -> None:
         agent.run()
     except Exception as e:
         pytest.fail(f"BuilderAgent.run() raised an exception: {e}")
+
 
 def test_judge_agent_smoke() -> None:
     """Test that JudgeAgent.run() can be called without error."""
