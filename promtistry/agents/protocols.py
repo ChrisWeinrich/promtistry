@@ -1,13 +1,9 @@
-from typing import Protocol, Any
+from typing import Any, Protocol
 
 
 class Agent(Protocol):
-    """
-    Protocol for all promtistry agents.
-    """
+    """Protocol for all promtistry agents."""
 
     def run(self, *args: Any, **kwargs: Any) -> Any:
-        """
-        Execute the agent's main logic.
-        """
+        """Execute the agent's main logic."""
         ...
