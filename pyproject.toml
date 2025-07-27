@@ -1,0 +1,17 @@
+[project]
+name = "promtistry"
+version = "0.1.0"
+description = "Prompt‑Builder Assistant – iteratively design high‑quality system prompts."
+authors = [
+    {name = "Christian Weinrich",email = "weinrich.c@web.de"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.13,<4.0"
+dependencies = [
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
