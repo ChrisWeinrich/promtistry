@@ -1,21 +1,18 @@
 """LangGraph flow for chat interactions."""
 
-import os
-
 from langgraph.graph import END, StateGraph
 
 from promtistry.agents.chat_agent import ChatAgent
+from promtistry.config import config_service
 from promtistry.flow.state import ChatState
 
-api_key = os.getenv("OPENAI_API_KEY")
-if not api_key:
-    error_message = "OPENAI_API_KEY environment variable is not set"
-    raise RuntimeError(error_message)
+config = config_service.get_config()
 
 agent = ChatAgent(
-    api_key=api_key,
-    temperature=0.7,
-    model_name="gpt-4o-mini",
+    api_key=config.api_key,
+    temperature=config.temperature,
+    model_name=config.model_name,
+    system_prompt=config.system_prompt,
 )
 
 

@@ -7,6 +7,7 @@ handles the display.
 """
 
 import os
+from dataclasses import asdict
 
 import streamlit as st
 
@@ -42,7 +43,9 @@ def main() -> None:  # (imperative is fine here)
             st.write(prompt)
 
         # 2) Invoke runner
-        state_dict = runner.invoke(st.session_state.chat_state.update(user_msg=prompt))
+        state_dict = runner.invoke(
+            asdict(st.session_state.chat_state.update(user_msg=prompt)),
+        )
         new_state = ChatState(**state_dict)
         st.session_state.chat_state = new_state
 
