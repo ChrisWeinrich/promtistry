@@ -2,6 +2,7 @@
 
 import os
 from dataclasses import dataclass
+from pathlib import Path
 
 
 @dataclass(frozen=True)
@@ -31,12 +32,16 @@ class ConfigService:
         # Builder settings
         builder_temperature = float(os.getenv("BUILDER_TEMPERATURE", "0.0"))
         builder_model_name = os.getenv("BUILDER_MODEL_NAME", "gpt-4.1")
-        builder_system_prompt = os.getenv("BUILDER_SYSTEM_PROMPT") or None
+        builder_system_prompt = os.getenv("BUILDER_SYSTEM_PROMPT") or self._load_prompt(
+            "builder.md",
+        )
 
         # Judge settings
         judge_temperature = float(os.getenv("JUDGE_TEMPERATURE", "0.0"))
         judge_model_name = os.getenv("JUDGE_MODEL_NAME", "gpt-4.1")
-        judge_system_prompt = os.getenv("JUDGE_SYSTEM_PROMPT") or None
+        judge_system_prompt = os.getenv("JUDGE_SYSTEM_PROMPT") or self._load_prompt(
+            "judge.md",
+        )
         judge_score_threshold = float(os.getenv("JUDGE_SCORE_THRESHOLD", "4.0"))
 
         self.config = Config(
@@ -49,6 +54,16 @@ class ConfigService:
             judge_system_prompt=judge_system_prompt,
             judge_score_threshold=judge_score_threshold,
         )
+
+    def _load_prompt(self: "ConfigService", filename: str) -> str | None:
+        """Load a prompt from the prompt folder or return None if missing."""
+        base_dir = Path(__file__).parent.parent.resolve()
+        path = base_dir / "prompts" / filename
+        try:
+            with path.open(encoding="utf-8") as f:
+                return f.read()
+        except FileNotFoundError:
+            return None
 
     def get_config(self: "ConfigService") -> Config:
         """Retrieve the current configuration."""
