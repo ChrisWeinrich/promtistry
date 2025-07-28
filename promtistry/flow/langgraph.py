@@ -8,11 +8,18 @@ from promtistry.flow.state import ChatState
 
 config = config_service.get_config()
 
-agent = ChatAgent(
+# Two agents: Prompt-Builder and Judge
+builder_agent = ChatAgent(
     api_key=config.api_key,
-    temperature=config.temperature,
-    model_name=config.model_name,
-    system_prompt=config.system_prompt,
+    temperature=config.builder_temperature,
+    model_name=config.builder_model_name,
+    system_prompt=config.builder_system_prompt,
+)
+judge_agent = ChatAgent(
+    api_key=config.api_key,
+    temperature=config.judge_temperature,
+    model_name=config.judge_model_name,
+    system_prompt=config.judge_system_prompt,
 )
 
 
@@ -29,7 +36,7 @@ def bot_node(state: ChatState) -> ChatState:
         # We send a farewell message …
         return state.update(bot_msg="See you soon! 👋")
 
-    answer: str = agent.run(state.user_msg)
+    answer: str = builder_agent.run(state.user_msg)
     return state.update(bot_msg=answer)
 
 

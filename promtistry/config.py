@@ -9,9 +9,13 @@ class Config:
     """Configuration data class for storing API settings."""
 
     api_key: str
-    temperature: float
-    model_name: str
-    system_prompt: str | None
+    builder_temperature: float
+    builder_model_name: str
+    builder_system_prompt: str | None
+    judge_temperature: float
+    judge_model_name: str
+    judge_system_prompt: str | None
+    judge_score_threshold: float
 
 
 class ConfigService:
@@ -23,14 +27,27 @@ class ConfigService:
         if not api_key:
             error_message = "OPENAI_API_KEY environment variable is not set"
             raise RuntimeError(error_message)
-        temperature = float(os.getenv("CHATBOT_TEMPERATURE", "0.0"))
-        model_name = os.getenv("CHATBOT_MODEL_NAME", "gpt-4.1")
-        system_prompt = os.getenv("CHATBOT_SYSTEM_PROMPT") or None
+
+        # Builder settings
+        builder_temperature = float(os.getenv("BUILDER_TEMPERATURE", "0.0"))
+        builder_model_name = os.getenv("BUILDER_MODEL_NAME", "gpt-4.1")
+        builder_system_prompt = os.getenv("BUILDER_SYSTEM_PROMPT") or None
+
+        # Judge settings
+        judge_temperature = float(os.getenv("JUDGE_TEMPERATURE", "0.0"))
+        judge_model_name = os.getenv("JUDGE_MODEL_NAME", "gpt-4.1")
+        judge_system_prompt = os.getenv("JUDGE_SYSTEM_PROMPT") or None
+        judge_score_threshold = float(os.getenv("JUDGE_SCORE_THRESHOLD", "4.0"))
+
         self.config = Config(
             api_key=api_key,
-            temperature=temperature,
-            model_name=model_name,
-            system_prompt=system_prompt,
+            builder_temperature=builder_temperature,
+            builder_model_name=builder_model_name,
+            builder_system_prompt=builder_system_prompt,
+            judge_temperature=judge_temperature,
+            judge_model_name=judge_model_name,
+            judge_system_prompt=judge_system_prompt,
+            judge_score_threshold=judge_score_threshold,
         )
 
     def get_config(self: "ConfigService") -> Config:
