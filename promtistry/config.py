@@ -42,7 +42,7 @@ class ConfigService:
         judge_system_prompt = os.getenv("JUDGE_SYSTEM_PROMPT") or self._load_prompt(
             "judge.md",
         )
-        judge_score_threshold = float(os.getenv("JUDGE_SCORE_THRESHOLD", "4.0"))
+        judge_score_threshold = float(os.getenv("JUDGE_SCORE_THRESHOLD", "8.0"))
 
         self.config = Config(
             api_key=api_key,
