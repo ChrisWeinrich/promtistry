@@ -1,10 +1,18 @@
 """LangGraph flow for chat interactions."""
 
+import logging
+
 from langgraph.graph import END, StateGraph
 
 from promtistry.agents.chat_agent import ChatAgent
 from promtistry.config import config_service
 from promtistry.flow.state import ChatState
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s %(name)s %(levelname)s %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 config = config_service.get_config()
 
@@ -29,6 +37,7 @@ def bot_node(state: ChatState) -> ChatState:
     If the user types "exit", set a farewell message,
     but do NOT call the LLM anymore.
     """
+    logger.debug("Entering bot_node with state: %s", state)
     if not state.user_msg:  # empty input = do nothing
         return state
 
@@ -36,8 +45,21 @@ def bot_node(state: ChatState) -> ChatState:
         # We send a farewell message …
         return state.update(bot_msg="See you soon! 👋")
 
+    logger.debug("bot_node calling builder_agent with user_msg: %s", state.user_msg)
     answer: str = builder_agent.run(state.user_msg)
+    logger.debug("bot_node received answer: %s", answer)
     return state.update(bot_msg=answer)
+
+
+def judge_node(state: ChatState) -> ChatState:
+    """Take `bot_msg`, call the Judge LLM, and return `judge_msg`."""
+    logger.debug("Entering judge_node with state: %s", state)
+    if not state.bot_msg:
+        return state
+    logger.debug("judge_node calling judge_agent with bot_msg: %s", state.bot_msg)
+    evaluation: str = judge_agent.run(state.bot_msg)
+    logger.debug("judge_node received evaluation: %s", evaluation)
+    return state.update(judge_msg=evaluation)
 
 
 # ----- Graph ----------------------------------------------------------------
@@ -45,9 +67,15 @@ graph = StateGraph(state_schema=ChatState)
 graph.add_node("bot", bot_node)
 graph.set_entry_point("bot")
 
+# Add judge node for evaluation
+graph.add_node("judge", judge_node)
 
-# After one bot invocation, terminate the graph
-graph.add_edge("bot", END)
+
+# After one bot invocation, proceed to judge step
+graph.add_edge("bot", "judge")
+
+# After judge invocation, terminate the graph
+graph.add_edge("judge", END)
 
 runner = graph.compile()
 __all__ = ["runner"]

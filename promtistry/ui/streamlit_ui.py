@@ -59,6 +59,20 @@ def main() -> None:  # (imperative is fine here)
         if prompt.strip().lower() == "exit":
             st.stop()
 
+    # Judge button: rate the last bot response independently
+    if st.session_state.chat_state.bot_msg and st.button("Bewerte", key="judge"):
+        state_dict = runner.invoke(asdict(st.session_state.chat_state))
+        new_state = ChatState(**state_dict)
+        st.session_state.chat_state = new_state
+        judge_reply = new_state.judge_msg
+        st.session_state.history.append(("judge", judge_reply))
+        with st.chat_message("assistant"):
+            st.markdown(
+                f"<div style='background-color:#EFEFEF;color:#FF5733;padding:10px;"
+                f"border-radius:5px'>{judge_reply}</div>",
+                unsafe_allow_html=True,
+            )
+
 
 if __name__ == "__main__":
     main()

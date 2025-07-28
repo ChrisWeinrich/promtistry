@@ -9,6 +9,7 @@ class ChatState:
 
     user_msg: str = ""
     bot_msg: str = ""
+    judge_msg: str = ""
 
     def update(self: "ChatState", **changes: str) -> "ChatState":
         """Update the chat state with new values."""

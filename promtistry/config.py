@@ -37,8 +37,8 @@ class ConfigService:
         )
 
         # Judge settings
-        judge_temperature = float(os.getenv("JUDGE_TEMPERATURE", "0.0"))
-        judge_model_name = os.getenv("JUDGE_MODEL_NAME", "gpt-4.1")
+        judge_temperature = float(os.getenv("JUDGE_TEMPERATURE", "1.0"))
+        judge_model_name = os.getenv("JUDGE_MODEL_NAME", "o4-mini")
         judge_system_prompt = os.getenv("JUDGE_SYSTEM_PROMPT") or self._load_prompt(
             "judge.md",
         )
