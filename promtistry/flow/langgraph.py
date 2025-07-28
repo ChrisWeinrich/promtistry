@@ -2,7 +2,7 @@
 
 import logging
 
-from langgraph.graph import END, StateGraph
+from langgraph.graph import StateGraph
 
 from promtistry.agents.chat_agent import ChatAgent
 from promtistry.config import config_service
@@ -57,7 +57,8 @@ def judge_node(state: ChatState) -> ChatState:
     if not state.bot_msg:
         return state
     logger.debug("judge_node calling judge_agent with bot_msg: %s", state.bot_msg)
-    evaluation: str = judge_agent.run(state.bot_msg)
+    instruction = f"Please evaluate the following prompt:\n{state.bot_msg}"
+    evaluation: str = judge_agent.run(instruction)
     logger.debug("judge_node received evaluation: %s", evaluation)
     return state.update(judge_msg=evaluation)
 
@@ -67,15 +68,7 @@ graph = StateGraph(state_schema=ChatState)
 graph.add_node("bot", bot_node)
 graph.set_entry_point("bot")
 
-# Add judge node for evaluation
-graph.add_node("judge", judge_node)
-
-
-# After one bot invocation, proceed to judge step
-graph.add_edge("bot", "judge")
-
-# After judge invocation, terminate the graph
-graph.add_edge("judge", END)
+# (Judge is invoked separately via UI; no automatic judge step in the flow)
 
 runner = graph.compile()
 __all__ = ["runner"]

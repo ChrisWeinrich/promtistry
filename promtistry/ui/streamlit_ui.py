@@ -11,7 +11,12 @@ from dataclasses import asdict
 
 import streamlit as st
 
-from promtistry.flow.langgraph import runner  # your LangGraph-Runner
+from promtistry.flow.langgraph import (
+    judge_node,
+    runner,
+)
+
+# your LangGraph-Runner and Judge node
 from promtistry.flow.state import ChatState  # Dataclass-State
 
 
@@ -43,9 +48,10 @@ def main() -> None:  # (imperative is fine here)
             st.write(prompt)
 
         # 2) Invoke runner
-        state_dict = runner.invoke(
-            asdict(st.session_state.chat_state.update(user_msg=prompt)),
-        )
+        with st.spinner("Bot is thinking..."):
+            state_dict = runner.invoke(
+                asdict(st.session_state.chat_state.update(user_msg=prompt)),
+            )
         new_state = ChatState(**state_dict)
         st.session_state.chat_state = new_state
 
@@ -61,8 +67,8 @@ def main() -> None:  # (imperative is fine here)
 
     # Judge button: rate the last bot response independently
     if st.session_state.chat_state.bot_msg and st.button("Bewerte", key="judge"):
-        state_dict = runner.invoke(asdict(st.session_state.chat_state))
-        new_state = ChatState(**state_dict)
+        with st.spinner("Judge is evaluating..."):
+            new_state = judge_node(st.session_state.chat_state)
         st.session_state.chat_state = new_state
         judge_reply = new_state.judge_msg
         st.session_state.history.append(("judge", judge_reply))
